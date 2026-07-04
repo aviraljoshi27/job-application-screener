@@ -3,6 +3,9 @@ from llm_client import LLMClient
 
 
 class ClaudeClient(LLMClient):
+    input_price_per_token = 3 / 1_000_000
+    output_price_per_token = 15 / 1_000_000
+
     def __init__(self, model_name: str = "claude-sonnet-4-6"):
         super().__init__(model_name)
         self.client = anthropic.Anthropic()

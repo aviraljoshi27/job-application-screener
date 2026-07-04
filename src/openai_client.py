@@ -3,6 +3,9 @@ from llm_client import LLMClient
 
 
 class OpenAIClient(LLMClient):
+    input_price_per_token = 0.15 / 1_000_000
+    output_price_per_token = 0.60 / 1_000_000
+
     def __init__(self, model_name: str = "gpt-4o-mini"):
         super().__init__(model_name)
         self.client = openai.OpenAI()

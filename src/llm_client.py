@@ -41,3 +41,18 @@ class LLMClient(ABC):
         end_time = time.perf_counter()
         time_taken = end_time - start_time
         return result, time_taken
+
+    def cost_dollars(self, input_tokens: int, output_tokens: int) -> tuple:
+        """
+        This method returns the price for input tokens and output tokens.
+
+        Args:
+            input_tokens: total tokens used in the input.
+            output_tokens: total tokens used in the output.
+
+        Returns:
+            A tuple of both input and output price.
+        """
+        total_input_price = input_tokens * self.input_price_per_token
+        total_output_price = output_tokens * self.output_price_per_token
+        return total_input_price, total_output_price
