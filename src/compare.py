@@ -51,16 +51,21 @@ if __name__ == "__main__":
         )
         return claude_price, gpt_price
 
-    prompt = """
+    prompt = """You are screening a candidate resume against a job description.
+
     Job Description:
     Senior React Developer. Required: 5+ years experience, Next.js production deployment, and TypeScript mastery. Nice to have: AWS Lambda.
 
     Candidate Resume Snippet:
-    Alex Rivera. 4 years of frontend experience. Built 3 production web apps using React, Next.js, and TypeScript. Set up CI/CD pipelines,
-    but no cloud/AWS experience.
+    Alex Rivera. 4 years of frontend experience. Built 3 production web apps using React, Next.js, and TypeScript. Set up CI/CD pipelines, but no cloud/AWS experience.
 
-    Instruction:
-    Rate this candidate's fit on a scale of 1-10 and provide a 2-sentence justification.
+    Instructions:
+    Rate this candidate's fit on a scale of 1-10 and justify the rating in exactly two sentences.
+
+    Respond in exactly this format, with no markdown, no headers, no bullet points, and no text before or after:
+
+    Rating: <score>/10
+    Justification: <two sentences>
     """
     # Execution
     claude_out, gpt_out = compare(claude, gpt, prompt)
@@ -75,42 +80,37 @@ if __name__ == "__main__":
     """).strip()
     )
     print(f"{'Claude Output':-^40}")
-    print(
-        dedent(
-            f"""
-            Text: {claude_out.get("response_text")}
-            Input Tokens Used: {claude_out.get("input_tokens")}
-            Output Tokens Used: {claude_out.get("output_tokens")}
-            Latency: {claude_out.get("latency_seconds"):.6f}
+    if claude_out.get("api_call_success"):
+        print(f"Text: {claude_out.get('response_text')}")
+        print(f"Input Tokens Used: {claude_out.get('input_tokens')}")
+        print(f"Output Tokens Used: {claude_out.get('output_tokens')}")
+        print(f"Latency: {claude_out.get('latency_seconds', 0):.6f}")
+        print(f"{'Claude Price':-^40}")
+        print(
+            dedent(
+                f"""
+            Input Price : ${claude_cost[0]:.6f},
+            Output Price : ${claude_cost[1]:.6f}
             """
-        ).strip()
-    )
-    print(f"{'Claude Price':-^40}")
-    print(
-        dedent(
-            f"""
-        Input Price : ${claude_cost[0]:.6f},
-        Output Price : ${claude_cost[1]:.6f}
-        """
-        ).strip()
-    )
+            ).strip()
+        )
+    else:
+        print(f"Error: {claude_out.get('error')}")
+
     print(f"{'GPT Output':-^40}")
-    print(
-        dedent(
-            f"""
-            Text: {gpt_out.get("response_text")}
-            Input Tokens Used: {gpt_out.get("input_tokens")}
-            Output Tokens Used: {gpt_out.get("output_tokens")}
-            Latency: {gpt_out.get("latency_seconds"):.6f}
+    if gpt_out.get("api_call_success"):
+        print(f"Text: {gpt_out.get('response_text')}")
+        print(f"Input Tokens Used: {gpt_out.get('input_tokens')}")
+        print(f"Output Tokens Used: {gpt_out.get('output_tokens')}")
+        print(f"Latency: {gpt_out.get('latency_seconds', 0):.6f}")
+        print(f"{'GPT Price':-^40}")
+        print(
+            dedent(
+                f"""
+            Input Price : ${gpt_cost[0]:.6f},
+            Output Price : ${gpt_cost[1]:.6f}
             """
-        ).strip()
-    )
-    print(f"{'GPT Price':-^40}")
-    print(
-        dedent(
-            f"""
-        Input Price : ${gpt_cost[0]:.6f},
-        Output Price : ${gpt_cost[1]:.6f}
-        """
-        ).strip()
-    )
+            ).strip()
+        )
+    else:
+        print(f"Error: {gpt_out.get('error')}")

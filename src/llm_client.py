@@ -31,7 +31,7 @@ class LLMClient(ABC):
         Args:
             func: method that we are checking the time for.
             *args: Optional parameters
-            **kwargs: Optional parameters in for of keyword and value
+            **kwargs: Optional parameters in form of keyword and value
 
         Returns:
             Output of the function and time used by that method to give the output.
